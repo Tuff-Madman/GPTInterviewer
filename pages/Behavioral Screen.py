@@ -72,8 +72,7 @@ def embeddings(text: str):
     # Create emebeddings
     embeddings = OpenAIEmbeddings()
     docsearch = FAISS.from_texts(texts, embeddings)
-    retriever = docsearch.as_retriever(search_tupe='similarity search')
-    return retriever
+    return docsearch.as_retriever(search_tupe='similarity search')
 
 def initialize_session_state():
 
@@ -87,8 +86,12 @@ def initialize_session_state():
         st.session_state.chain_type_kwargs = {"prompt": Behavioral_Prompt}
     # interview history
     if "history" not in st.session_state:
-        st.session_state.history = []
-        st.session_state.history.append(Message("ai", "Hello there! I am your interviewer today. I will access your soft skills through a series of questions. Let's get started! Please start by saying hello or introducing yourself. Note: The maximum length of your answer is 4097 tokens!"))
+        st.session_state.history = [
+            Message(
+                "ai",
+                "Hello there! I am your interviewer today. I will access your soft skills through a series of questions. Let's get started! Please start by saying hello or introducing yourself. Note: The maximum length of your answer is 4097 tokens!",
+            )
+        ]
     # token count
     if "token_count" not in st.session_state:
         st.session_state.token_count = 0

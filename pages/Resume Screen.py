@@ -52,17 +52,14 @@ def save_vector(resume):
     """embeddings"""
     nltk.download('punkt')
     pdf_reader = PdfReader(resume)
-    text = ""
-    for page in pdf_reader.pages:
-        text += page.extract_text()
+    text = "".join(page.extract_text() for page in pdf_reader.pages)
     # Split the document into chunks
     text_splitter = NLTKTextSplitter()
     texts = text_splitter.split_text(text)
     text_splitter = NLTKTextSplitter()
     texts = text_splitter.split_text(text)
     embeddings = OpenAIEmbeddings()
-    docsearch = FAISS.from_texts(texts, embeddings)
-    return docsearch
+    return FAISS.from_texts(texts, embeddings)
 
 def initialize_session_state_resume():
     # convert resume to embeddings
@@ -76,8 +73,12 @@ def initialize_session_state_resume():
         st.session_state.chain_type_kwargs = prompt_sector(position, templates)
     # interview history
     if "resume_history" not in st.session_state:
-        st.session_state.resume_history = []
-        st.session_state.resume_history.append(Message(origin="ai", message="Hello, I am your interivewer today. I will ask you some questions regarding your resume and your experience. Please start by saying hello or introducing yourself. Note: The maximum length of your answer is 4097 tokens!"))
+        st.session_state.resume_history = [
+            Message(
+                origin="ai",
+                message="Hello, I am your interivewer today. I will ask you some questions regarding your resume and your experience. Please start by saying hello or introducing yourself. Note: The maximum length of your answer is 4097 tokens!",
+            )
+        ]
     # token count
     if "token_count" not in st.session_state:
         st.session_state.token_count = 0

@@ -48,10 +48,8 @@ def save_vector(text):
     nltk.download('punkt')
     text_splitter = NLTKTextSplitter()
     texts = text_splitter.split_text(text)
-     # Create emebeddings
     embeddings = OpenAIEmbeddings()
-    docsearch = FAISS.from_texts(texts, embeddings)
-    return docsearch
+    return FAISS.from_texts(texts, embeddings)
 
 def initialize_session_state_jd():
     """ initialize session states """
@@ -67,10 +65,13 @@ def initialize_session_state_jd():
         st.session_state.jd_memory = ConversationBufferMemory()
     # interview history
     if "jd_history" not in st.session_state:
-        st.session_state.jd_history = []
-        st.session_state.jd_history.append(Message("ai",
-                                                   "Hello, Welcome to the interview. I am your interviewer today. I will ask you professional questions regarding the job description you submitted."
-                                                   "Please start by introducting a little bit about yourself. Note: The maximum length of your answer is 4097 tokens!"))
+        st.session_state.jd_history = [
+            Message(
+                "ai",
+                "Hello, Welcome to the interview. I am your interviewer today. I will ask you professional questions regarding the job description you submitted."
+                "Please start by introducting a little bit about yourself. Note: The maximum length of your answer is 4097 tokens!",
+            )
+        ]
     # token count
     if "token_count" not in st.session_state:
         st.session_state.token_count = 0

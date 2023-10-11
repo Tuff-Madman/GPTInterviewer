@@ -13,17 +13,12 @@ def embedding(text):
     """embeddings"""
     text_splitter = NLTKTextSplitter()
     texts = text_splitter.split_text(text)
-     # Create emebeddings
     embeddings = OpenAIEmbeddings()
-    docsearch = FAISS.from_texts(texts, embeddings)
-    return docsearch
+    return FAISS.from_texts(texts, embeddings)
 
 def resume_reader(resume):
     pdf_reader = PdfReader(resume)
-    text = ""
-    for page in pdf_reader.pages:
-        text += page.extract_text()
-    return text
+    return "".join(page.extract_text() for page in pdf_reader.pages)
 
 def initialize_session_state(template=None, position=None):
     """ initialize session states """

@@ -9,15 +9,15 @@ def prompt_sector(position: str, prompts: classmethod) -> dict:
         )
         chain_type_kwargs = {"prompt": PROMPT}
 
-    if position == 'Software Engineer':
+    elif position == 'Marketing':
         PROMPT = PromptTemplate(
-            template= prompts.swe_template, input_variables=["context", "question"]
+            template= prompts.marketing_template, input_variables=["context", "question"]
         )
         chain_type_kwargs = {"prompt": PROMPT}
 
-    if position == 'Marketing':
+    elif position == 'Software Engineer':
         PROMPT = PromptTemplate(
-            template= prompts.marketing_template, input_variables=["context", "question"]
+            template= prompts.swe_template, input_variables=["context", "question"]
         )
         chain_type_kwargs = {"prompt": PROMPT}
 
